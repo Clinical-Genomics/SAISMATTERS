@@ -29,13 +29,15 @@ for (i in colnames(df)){
 }
 
 model=neuralnet(as.formula(m), size_matters_analysis, hidden = 2, stepmax = 1e10)
+dfsub = subset(size_matters_analysis, select = columns)
+prediction = as.numeric(predict(model, as.matrix(dfsub) ))
+
+print("correlation: prediction vs truth")
+cor(size_matters_analysis$FFY,prediction)
+print("linear model:prediction vs truth")
+df=data.frame(x=size_matters_analysis$FFY,y=prediction)
+internal <- lm(y ~ x,df)
+summary(internal)
+
 save('model', 'columns', file = paste0(output_prefix, '.model.RData'))
-
-#dfsub = subset(size_matters_analysis, select = columns)
-#hopp=as.matrix(dfsub)
-#prediction = as.numeric(predict(model, dfsub))
-#cor(size_matters_analysis$FFY,prediction)
-#dfp <- data.frame(prediction,size_matters_analysis$FFY)
-
-
 
